@@ -4,10 +4,7 @@ import React from "react";
 function Home() {
   return (
     <div>
-      Home System
-      <div>
-        <UserButton afterSignOutUrl="/" />
-      </div>
+      <UserButton afterSignOutUrl="/" />
     </div>
   );
 }
