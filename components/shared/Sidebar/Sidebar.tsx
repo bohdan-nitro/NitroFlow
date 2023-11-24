@@ -49,13 +49,29 @@ function Sidebar() {
             <div className="flex flex-col gap-3">
               <Link href={"/sign-in"}>
                 <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
-                  <span className="primary-text-gradient">Log in</span>
+                  <Image
+                    className="invert-colors lg:hidden"
+                    width={20}
+                    height={20}
+                    alt="login"
+                    src={"./assets/icons/account.svg"}
+                  />
+                  <span className="primary-text-gradient max-lg:hidden">
+                    Log in
+                  </span>
                 </Button>
               </Link>
 
               <Link href={"/sign-up"}>
                 <Button className="text-dark400_light900 small-medium btn-tertiary light-border-2 min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
-                  Sign up
+                  <Image
+                    className="invert-colors lg:hidden"
+                    width={20}
+                    height={20}
+                    alt="sign-up"
+                    src={"./assets/icons/sign-up.svg"}
+                  />
+                  <span className="max-lg:hidden">Sign up</span>
                 </Button>
               </Link>
             </div>
