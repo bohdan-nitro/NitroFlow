@@ -5,17 +5,17 @@ import RenderTag from "../RenderTag/RenderTag";
 
 function RightSidebar() {
   const topQuestions = [
-    { _id: 1, title: "How can i get NextJS course" },
-    { _id: 2, title: "Welcome to he Black mesa" },
-    { _id: 3, title: "This is new system generation in Redux" },
-    { _id: 4, title: "How can i render the contet without data" },
-    { _id: 5, title: "Can i change theme with specific props" },
+    { _id: "1", title: "How can i get NextJS course" },
+    { _id: "2", title: "Welcome to he Black mesa" },
+    { _id: "3", title: "This is new system generation in Redux" },
+    { _id: "4", title: "How can i render the contet without data" },
+    { _id: "5", title: "Can i change theme with specific props" },
   ];
   const popularTags = [
-    { _id: 1, name: "javascript", totalQuestions: 2 },
-    { _id: 2, name: "next", totalQuestions: 5 },
-    { _id: 3, name: "react", totalQuestions: 3 },
-    { _id: 4, name: "redux", totalQuestions: 1 },
+    { _id: "1", name: "javascript", totalQuestions: 2 },
+    { _id: "2", name: "next", totalQuestions: 5 },
+    { _id: "3", name: "react", totalQuestions: 3 },
+    { _id: "4", name: "redux", totalQuestions: 1 },
   ];
   return (
     <section className="custom-scrollbar background-light900_dark200 light-border shadow-light-300 sticky right-0 top-0 flex h-screen w-[350px] flex-col overflow-y-auto border-l p-6 pt-36 dark:shadow-none max-xl:hidden">
