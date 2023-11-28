@@ -6,7 +6,7 @@ import Filter from "@/components/shared/Filter/Filter";
 import { HomePageFilters } from "@/constans/filters";
 import HomeFilters from "@/components/home/HomeFilters";
 import QuestionCard from "@/components/shared/QuestionCard/QuestionCard";
-import Noresult from "@/components/shared/Noresult/NOresult";
+import Noresult from "@/components/shared/Noresult/Noresult";
 
 const questions = [
   {
