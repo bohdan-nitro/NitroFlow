@@ -18,6 +18,7 @@ import { QuestionsSchema } from "@/lib/validation";
 import { Editor } from "@tinymce/tinymce-react";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
+import { AskQuestionAction } from "@/lib/actions/question.action";
 
 const type = "create";
 
@@ -34,9 +35,11 @@ function Question() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof QuestionsSchema>) {
+  async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
     try {
+      await AskQuestionAction({});
+      //   setIsSubmitting(false);
     } catch (error) {
       setIsSubmitting(false);
     }
@@ -123,6 +126,8 @@ function Question() {
                       (editorRef.current = editor)
                     }
                     initialValue=""
+                    onBlur={field.onBlur}
+                    onEditorChange={(content) => field.onChange(content)}
                     init={{
                       height: 350,
                       menubar: false,
