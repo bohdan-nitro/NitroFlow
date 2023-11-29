@@ -7,6 +7,7 @@ import { HomePageFilters } from "@/constans/filters";
 import HomeFilters from "@/components/home/HomeFilters";
 import QuestionCard from "@/components/shared/QuestionCard/QuestionCard";
 import Noresult from "@/components/shared/Noresult/Noresult";
+import { getQuestions } from "@/lib/actions/question.action";
 
 const questions = [
   {
@@ -45,7 +46,11 @@ const questions = [
   },
 ];
 
-function Home() {
+async function Home() {
+  const result = await getQuestions({});
+
+  console.log(result.questions, "quu");
+
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -73,8 +78,8 @@ function Home() {
       <HomeFilters />
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {questions.length > 0 ? (
-          questions.map((item) => (
+        {result.questions.length > 0 ? (
+          result.questions.map((item) => (
             <QuestionCard
               upvotes={item.upvotes}
               author={item.author}
