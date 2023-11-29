@@ -21,7 +21,7 @@ import { Badge } from "../ui/badge";
 import { AskQuestionAction } from "@/lib/actions/question.action";
 import { useRouter, usePathname } from "next/navigation";
 
-const type = "create";
+const isEdit = false;
 
 interface Props {
   mongoUserId: string;
@@ -230,9 +230,9 @@ function Question({ mongoUserId }: Props) {
           className="primary-gradient !text-light-900 w-fit"
           type="submit">
           {isSubmitting ? (
-            <>{type === "edit" ? "Editing..." : "Posting..."}</>
+            <> {isEdit ? "Editing..." : "Posting..."} </>
           ) : (
-            <>{type === "edit" ? "Edit Question" : "Ask a question"}</>
+            <> {isEdit ? "Edit Question" : "Ask a question"} </>
           )}
         </Button>
       </form>

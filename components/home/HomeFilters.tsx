@@ -3,11 +3,16 @@ import React, { useState } from "react";
 import { HomePageFilters } from "@/constans/filters";
 import { Button } from "../ui/button";
 
+interface FilterProps {
+  name: string;
+  value: string;
+}
+
 function HomeFilters() {
   const [active, setActive] = useState("");
 
-  const handleActive = (item) => {
-    setActive(item.value);
+  const handleActive = ({ value }: FilterProps): void => {
+    setActive(value);
   };
 
   return (

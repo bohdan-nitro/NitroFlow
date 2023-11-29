@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 
@@ -19,7 +19,7 @@ function LocalSearchbar({
   placeholder,
 }: SearchProps) {
   const [text, setText] = useState("");
-  const handleText = (event) => {
+  const handleText = (event: ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };
   return (
@@ -37,7 +37,7 @@ function LocalSearchbar({
       <Input
         type="text"
         placeholder={placeholder}
-        value={""}
+        value={text}
         onChange={handleText}
         className="paragraph-regular no-focus placeholder background-light800_darkgradient border-none shadow-none outline-none"
       />

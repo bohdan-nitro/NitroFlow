@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
 
 function GlobalSearch() {
   const [text, setText] = useState("");
-  const handleText = (event) => {
+  const handleText = (event: ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };
   return (

@@ -9,47 +9,8 @@ import QuestionCard from "@/components/shared/QuestionCard/QuestionCard";
 import Noresult from "@/components/shared/Noresult/Noresult";
 import { getQuestions } from "@/lib/actions/question.action";
 
-const questions = [
-  {
-    _id: 1,
-    title: "Cascade deletes in Academy",
-    tags: [
-      { _id: "1", name: "javascript" },
-      { _id: "2", name: "sql" },
-    ],
-    author: {
-      _id: "author1",
-      name: "Bobby Man",
-      pictute: "url/to/picture1",
-    },
-    upvotes: 1000000,
-    views: 33,
-    answers: [],
-    createdAt: new Date("2023-11-26T17:50:45.370Z"),
-  },
-  {
-    _id: 2,
-    title: "How to implement a list of Items",
-    tags: [
-      { _id: "1", name: "javascript" },
-      { _id: "2", name: "react" },
-    ],
-    author: {
-      _id: "author2",
-      name: "Bobby Criton",
-      pictute: "url/to/picture2",
-    },
-    upvotes: 15,
-    views: 35,
-    answers: [],
-    createdAt: new Date("2023-10-26T17:50:45.370Z"),
-  },
-];
-
 async function Home() {
   const result = await getQuestions({});
-
-  console.log(result.questions, "quu");
 
   return (
     <>
