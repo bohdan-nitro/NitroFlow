@@ -10,7 +10,7 @@ interface QuestionProps {
   author: {
     _id: string;
     name: string;
-    pictute: string;
+    picture: string;
   }[];
   upvotes: number;
   views: number;
@@ -32,7 +32,6 @@ const QuestionCard = ({
   createdAt,
   tags,
 }: QuestionProps) => {
-  console.log(author[0].name, "auth");
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
@@ -55,7 +54,7 @@ const QuestionCard = ({
       </div>
       <div className="flex-between mt-6 w-full flex-wrap gap-3">
         <Metric
-          imgUrl="/assets/icons/avatar.svg"
+          imgUrl={author[0].picture}
           alt="user"
           value={author[0].name}
           title={`- Asked ${getTimeStamp(createdAt)}`}
