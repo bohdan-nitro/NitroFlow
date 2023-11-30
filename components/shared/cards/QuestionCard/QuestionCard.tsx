@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import RenderTag from "../RenderTag/RenderTag";
-import Metric from "../Metric/Metric";
+import RenderTag from "../../RenderTag/RenderTag";
+import Metric from "../../Metric/Metric";
 import { getTimeStamp, formatDividerNumber } from "@/lib/utils";
 
 interface QuestionProps {

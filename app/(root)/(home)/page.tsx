@@ -5,7 +5,7 @@ import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import Filter from "@/components/shared/Filter/Filter";
 import { HomePageFilters } from "@/constans/filters";
 import HomeFilters from "@/components/home/HomeFilters";
-import QuestionCard from "@/components/shared/QuestionCard/QuestionCard";
+import QuestionCard from "@/components/shared/cards/QuestionCard/QuestionCard";
 import Noresult from "@/components/shared/Noresult/Noresult";
 import { getQuestions } from "@/lib/actions/question.action";
 
