@@ -1,4 +1,5 @@
 import { BADGE_CRITERIA } from "@/constants";
+import { ObjectId } from "mongodb";
 
 export interface SidebarLink {
   imgURL: string;
@@ -43,6 +44,11 @@ export interface BadgeCounts {
   GOLD: number;
   SILVER: number;
   BRONZE: number;
+}
+
+export interface TagsProps {
+  _id: ObjectId | string;
+  name: string;
 }
 
 export type BadgeCriteriaType = keyof typeof BADGE_CRITERIA;
