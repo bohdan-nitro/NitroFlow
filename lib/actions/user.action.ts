@@ -1,7 +1,7 @@
 "use server"
 import { connectToDataBase } from "../mongoose";
 import User from "@/database/user.model";
-import { CreateUserParams, DeleteUserParams, GetAllUsersParams, UpdateUserParams } from "./shared.types";
+import { CreateUserParams, DeleteUserParams, GetAllUsersParams, ToggleSaveQuestionParams, UpdateUserParams } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 
@@ -80,6 +80,35 @@ export async function getAllUsers(params:GetAllUsersParams) {
         // const {page = 1, pageSize = 20, filter, searchQuery} = params;
         const users = await User.find({}).sort({createdAt: -1});
         return {users};
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export async function toggleSaveQuestion(params:ToggleSaveQuestionParams) {
+    try {
+        connectToDataBase()
+        const {questionId, path, userId} = params;
+        const user = await User.findById(userId)
+        if(!user){
+            throw new Error("User is not found")
+        }
+        const questionIsSaved = user.saved.includes(questionId);
+        if(questionIsSaved){
+            // Если у нас уже сохраненый вопрос то тогда мы убираем его из списка
+            await User.findByIdAndUpdate(userId, 
+                {$pull: {saved: questionId}},
+                {new: true}
+            )
+        } else {
+            // Если нету до добавляем в список
+            await User.findByIdAndUpdate(userId, 
+                {$addToSet: {saved: questionId}},
+                {new: true}
+            )
+        }
+        revalidatePath(path)
     } catch (error) {
         console.log(error)
         throw error

@@ -2,7 +2,7 @@
 import { connectToDataBase } from "../mongoose";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
-import { GetQuestionsParams, CreateQuestionParams, GetQuestionByIdParams } from "./shared.types";
+import { GetQuestionsParams, CreateQuestionParams, GetQuestionByIdParams, QuestionVoteParams } from "./shared.types";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 
@@ -69,6 +69,64 @@ export async function getQuestionById(params:GetQuestionByIdParams) {
         .populate({path: "tags", model: Tag, select: "_id name"})
         .populate({path: "author", model: User, select: "_id clerkId picture name"})
         return question;
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+    
+}
+
+export async function getQuestionUpvote(params:QuestionVoteParams) {
+    try {
+        connectToDataBase()
+        // Берем нужные параметры из пропсов компонента
+        const {questionId, userId, hasdownVoted, hasupVoted, path} = params;
+        // Нам нужен изначально пустой обьект для дальнйшей модификации
+        let updateQuery = {};
+
+        // Если у нас апвоутс не пустой то мы беремд анные оттуда с этой таблицы
+        if(hasupVoted){
+            updateQuery = {$pull: {upvotes: userId}}
+            // Если у нас давнвотес не пустые мы берем их и дальше пушим наши апвотес
+        } else if (hasdownVoted){
+            updateQuery = {$pull: {downvotes: userId}, $push: {upvotes: userId}}
+            // Если у нас пустота то тогда мы создаем новый обьект в таблице
+        } else {
+            updateQuery = {$addToSet: {upvotes: userId}}
+        }
+
+        // Находим нужный обьект в таблице по айли прокидываем най апдейт обьект и приставка тру дает понять монгодб что нужно создать новый обьект в таблице
+        const question = await Question.findByIdAndUpdate(questionId, updateQuery, {new: true})
+        if(!question){
+            throw new Error("Question is not found")
+        }
+        revalidatePath(path)
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+    
+}
+
+export async function getQuestionDownvote(params:QuestionVoteParams) {
+    try {
+        connectToDataBase()
+        const {questionId, userId, hasdownVoted, hasupVoted, path} = params;
+        let updateQuery = {};
+
+        if(hasdownVoted){
+            updateQuery = {$pull: {downvotes: userId}}
+        } else if (hasupVoted){
+            updateQuery = {$pull: {upvotes: userId}, $push: {downvotes: userId}}
+        } else {
+            updateQuery = {$addToSet: {downvotes: userId}}
+        }
+
+        const question = await Question.findByIdAndUpdate(questionId, updateQuery, {new: true})
+        if(!question){
+            throw new Error("Question is not found")
+        }
+        revalidatePath(path)
     } catch (error) {
         console.log(error)
         throw error
