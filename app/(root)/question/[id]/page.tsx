@@ -5,8 +5,7 @@ import Image from "next/image";
 import Metric from "@/components/shared/Metric/Metric";
 import { formatDividerNumber, getTimeStamp } from "@/lib/utils";
 import ParseHTML from "@/components/shared/ParseHTML/ParseHTML";
-import {
-  RenderTag,
+import RenderTag, {
   RenderProps,
 } from "@/components/shared/RenderTag/RenderTag";
 import Answer from "@/components/forms/Answer";
