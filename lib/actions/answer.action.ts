@@ -1,8 +1,7 @@
 "use server"
-import { AnswerVoteParams, CreateAnswerParams, GetAnswersParams, QuestionVoteParams } from "./shared.types"
+import { AnswerVoteParams, CreateAnswerParams, GetAnswersParams } from "./shared.types"
 import { connectToDataBase } from "../mongoose"
 import Answer from "@/database/answer.model"
-import User from "@/database/user.model"
 import Question from "@/database/question.model"
 import { revalidatePath } from "next/cache"
 

@@ -5,14 +5,17 @@ import Image from "next/image";
 import Metric from "@/components/shared/Metric/Metric";
 import { formatDividerNumber, getTimeStamp } from "@/lib/utils";
 import ParseHTML from "@/components/shared/ParseHTML/ParseHTML";
-import RenderTag from "@/components/shared/RenderTag/RenderTag";
+import {
+  RenderTag,
+  RenderProps,
+} from "@/components/shared/RenderTag/RenderTag";
 import Answer from "@/components/forms/Answer";
 import { auth } from "@clerk/nextjs";
 import { getUserById } from "@/lib/actions/user.action";
 import AllAnswers from "@/components/shared/AllAnswers/AllAnswers";
 import Voting from "@/components/shared/Voting/Voting";
 
-async function Question({ params }) {
+async function Question({ params }: any) {
   const result = await getQuestionById({ questionId: params.id });
   const { userId: clerkId } = auth();
 
@@ -21,7 +24,6 @@ async function Question({ params }) {
   if (clerkId) {
     mongoUser = await getUserById({ userId: clerkId });
   }
-  // console.log(result, "res");
 
   return (
     <>
@@ -84,8 +86,8 @@ async function Question({ params }) {
       <ParseHTML data={result.content} />
 
       <div className="mt-8 flex flex-wrap gap-2">
-        {result.tags.map((item): any => (
-          <RenderTag key={item._id} name={item.name} _id={item._id} />
+        {result.tags.map(({ _id, name }: RenderProps) => (
+          <RenderTag key={_id} name={name} _id={_id} />
         ))}
       </div>
       <AllAnswers

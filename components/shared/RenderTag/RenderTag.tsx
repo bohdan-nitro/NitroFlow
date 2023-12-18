@@ -2,14 +2,14 @@ import React from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
-interface Props {
+export interface RenderProps {
   _id: string;
   totalQuestions?: number;
   name: string;
   showCount?: boolean;
 }
 
-function RenderTag({ _id, totalQuestions, name, showCount }: Props) {
+function RenderTag({ _id, totalQuestions, name, showCount }: RenderProps) {
   return (
     <Link
       className="flex items-center justify-between gap-2"

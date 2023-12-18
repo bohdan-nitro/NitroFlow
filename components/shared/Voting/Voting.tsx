@@ -6,7 +6,7 @@ import {
   getQuestionUpvote,
   getQuestionDownvote,
 } from "@/lib/actions/question.action";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   getQuestionUpvoteAnswer,
   getQuestionDownvoteAnswer,
@@ -35,7 +35,6 @@ function Voting({
   hasSaved,
 }: Props) {
   const pathname = usePathname();
-  //   const router = useRouter();
 
   const handleSave = async () => {
     await toggleSaveQuestion({
