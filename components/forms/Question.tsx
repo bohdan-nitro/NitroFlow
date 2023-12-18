@@ -20,6 +20,7 @@ import Image from "next/image";
 import { Badge } from "../ui/badge";
 import { AskQuestionAction } from "@/lib/actions/question.action";
 import { useRouter, usePathname } from "next/navigation";
+import { useTheme } from "@/context/ThemeProvider";
 
 const isEdit = false;
 
@@ -28,6 +29,7 @@ interface Props {
 }
 
 function Question({ mongoUserId }: Props) {
+  const { mode } = useTheme();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -169,6 +171,8 @@ function Question({ mongoUserId }: Props) {
                         "alignright alignjustify | bullist numlist outdent indent",
                       content_style:
                         "body { font-family:Inter; font-size:16px }",
+                      skin: mode === "dark" ? "oxide-dark" : "oxide",
+                      content_css: mode === "dark" ? "dark" : "light",
                     }}
                   />
                 </>
