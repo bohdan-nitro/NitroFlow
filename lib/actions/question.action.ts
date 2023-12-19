@@ -43,7 +43,7 @@ export async function AskQuestionAction(params: CreateQuestionParams){
             {name: {$regex: new RegExp(`^${tag}$`, "i")}},
             // $setOnInsert: Устанавливает поле name в значение tag только в случае, если операция вставки (upsert) происходит (если не найден существующий тег).
             // $push: Добавляет _id вопроса (question._id) в массив questions. Это предполагает, что в схеме тега есть массив questions, куда добавляются идентификаторы связанных вопросов.
-            {$setOnInsert: {name: tag}, $push: {question: question._id}},
+            {$setOnInsert: {name: tag}, $push: {questions: question._id}},
             // upsert: true: Если не найден существующий тег, то создает новый с заданными значениями.
             // new: true: Возвращает обновленный документ в результате операции.
             {upsert: true, new: true}
