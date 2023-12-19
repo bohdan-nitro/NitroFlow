@@ -3,7 +3,7 @@ import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import Filter from "@/components/shared/Filter/Filter";
 import { QuestionFilters } from "@/constans/filters";
 import QuestionCard, {
-  QuestionItem,
+  QuestionProps,
 } from "@/components/shared/cards/QuestionCard/QuestionCard";
 import Noresult from "@/components/shared/Noresult/Noresult";
 import { auth } from "@clerk/nextjs";
@@ -38,19 +38,30 @@ async function Collection() {
 
       <div className="mt-10 flex w-full flex-col gap-6">
         {result.questions.length > 0 ? (
-          result.questions.map(({ item }: QuestionItem) => (
-            <QuestionCard
-              upvotes={item.upvotes}
-              author={item.author}
-              tags={item.tags}
-              _id={item._id}
-              title={item.title}
-              key={item._id}
-              answers={item.answers}
-              views={item.views}
-              createdAt={item.createdAt}
-            />
-          ))
+          result.questions.map(
+            ({
+              upvotes,
+              author,
+              tags,
+              _id,
+              title,
+              answers,
+              views,
+              createdAt,
+            }: QuestionProps) => (
+              <QuestionCard
+                upvotes={upvotes}
+                author={author}
+                tags={tags}
+                _id={_id}
+                title={title}
+                key={_id}
+                answers={answers}
+                views={views}
+                createdAt={createdAt}
+              />
+            )
+          )
         ) : (
           <Noresult
             description="You can ask a qustion for the force a future questions card"

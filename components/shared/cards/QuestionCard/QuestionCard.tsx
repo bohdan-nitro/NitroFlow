@@ -4,7 +4,7 @@ import RenderTag from "../../RenderTag/RenderTag";
 import Metric from "../../Metric/Metric";
 import { getTimeStamp, formatDividerNumber } from "@/lib/utils";
 
-interface QuestionProps {
+export interface QuestionProps {
   _id: number;
   title: string;
   author: {
@@ -20,10 +20,6 @@ interface QuestionProps {
     _id: string;
     name: string;
   }[];
-}
-
-export interface QuestionItem {
-  item: QuestionProps;
 }
 
 const QuestionCard = ({
