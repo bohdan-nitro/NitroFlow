@@ -2,9 +2,11 @@
 import { connectToDataBase } from "../mongoose";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
-import { GetQuestionsParams, CreateQuestionParams, GetQuestionByIdParams, QuestionVoteParams } from "./shared.types";
+import { GetQuestionsParams, CreateQuestionParams, GetQuestionByIdParams, QuestionVoteParams, DeleteQuestionParams, EditQuestionParams } from "./shared.types";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
+import Answer from "@/database/answer.model";
+import Interaction from "@/database/interaction.model";
 
 export async function getQuestions(params:GetQuestionsParams) {
     try {
@@ -133,3 +135,45 @@ export async function getQuestionDownvote(params:QuestionVoteParams) {
     }
     
 }
+
+export async function deleteQuestion(params:DeleteQuestionParams) {
+    try {
+        connectToDataBase() 
+        const {questionId, path} = params;
+        // Удаляем все вопросы
+         await Question.deleteOne({_id: questionId})
+        //  Удаляем все ответы связанные с вопросом
+         await Answer.deleteMany({question: questionId})
+        //  Удаляем взаимодействия с вопросом
+         await Interaction.deleteMany({question: questionId})
+        //  Обновляем теги и убираем связь между несуществующим вопросом и обновляем все связи с обновленными данными после удаления
+         await Tag.updateMany({questions: questionId}, {$pull: {questions: questionId}})
+        revalidatePath(path)
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export async function editQuestion(params:EditQuestionParams) {
+    try {
+        connectToDataBase() 
+        const {questionId, path, content, title} = params;
+        // Удаляем все вопросы
+         const question = await Question.findByIdAndUpdate(questionId)
+         .populate("tags")
+
+         if(!question){
+            throw new Error("Question is not found")
+         }
+         question.title = title;
+         question.content = content;
+         await question.save()
+       
+        revalidatePath(path)
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+

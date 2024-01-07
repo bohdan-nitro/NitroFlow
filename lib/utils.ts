@@ -49,3 +49,14 @@ export const formatDividerNumber = (num: number): string => {
     return num.toString()
   }
 }
+// export function formatDateWithMonthAndYear(dateObject: Date) {
+//   const month = dateObject.toLocaleString("default", {month: "long",})
+//   const year = dateObject.getFullYear()
+//   const joinedData = `${month} ${year}`
+
+//   return joinedData;
+// }
+export function formatDateWithMonthAndYear2(dateObject:Date): string {
+  const options = { year: 'numeric', month: 'long' };
+  return dateObject.toLocaleDateString('en-US', options);
+}

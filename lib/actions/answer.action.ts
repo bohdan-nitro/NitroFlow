@@ -1,9 +1,10 @@
 "use server"
-import { AnswerVoteParams, CreateAnswerParams, GetAnswersParams } from "./shared.types"
+import { AnswerVoteParams, CreateAnswerParams, DeleteAnswerParams, GetAnswersParams } from "./shared.types"
 import { connectToDataBase } from "../mongoose"
 import Answer from "@/database/answer.model"
 import Question from "@/database/question.model"
 import { revalidatePath } from "next/cache"
+import Interaction from "@/database/interaction.model"
 
 
 
@@ -92,4 +93,27 @@ export async function getQuestionDownvoteAnswer(params:AnswerVoteParams) {
         throw error
     }
     
+}
+
+export async function deleteAnswer(params:DeleteAnswerParams) {
+    try {
+        connectToDataBase() 
+        const {answerId, path} = params;
+        // Находим ответ по айди
+        const answer = await Answer.findById(answerId)
+        if(!answer){
+            throw new Error("Answer not found")
+        }
+        // Удаляем ответ по айди
+        await Answer.deleteOne({_id: answerId})
+        // Обновляем вопросы и ответы связанные с нашим ответайди 
+        await Question.updateMany({_id: answer.question}, {$pull: {answers: answerId}})
+        
+        await Interaction.deleteMany({answer: answerId})
+         
+        revalidatePath(path)
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
 }

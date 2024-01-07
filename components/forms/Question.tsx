@@ -18,48 +18,60 @@ import { QuestionsSchema } from "@/lib/validation";
 import { Editor } from "@tinymce/tinymce-react";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
-import { AskQuestionAction } from "@/lib/actions/question.action";
+import { AskQuestionAction, editQuestion } from "@/lib/actions/question.action";
 import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
 
-const isEdit = false;
-
 interface Props {
+  type?: string;
   mongoUserId: string;
+  questionDetails?: string;
 }
 
-function Question({ mongoUserId }: Props) {
+function Question({ mongoUserId, type, questionDetails }: Props) {
   const { mode } = useTheme();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
+  const parsedQuestionDetails = JSON.parse(questionDetails || "");
+  const groupTags = parsedQuestionDetails.tags.map((item) => item.name);
+
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
     defaultValues: {
-      title: "",
-      explanation: "",
-      tags: [],
+      title: parsedQuestionDetails.title || "",
+      explanation: parsedQuestionDetails.content || "",
+      tags: groupTags || [],
     },
   });
-
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
     try {
-      await AskQuestionAction({
-        title: values.title,
-        content: values.explanation,
-        tags: values.tags,
-        author: JSON.parse(mongoUserId),
-        path: pathname,
-      });
-      router.push("/");
-      setIsSubmitting(false);
+      if (type === "Edit") {
+        await editQuestion({
+          title: values.title,
+          content: values.explanation,
+          path: pathname,
+          questionId: parsedQuestionDetails._id,
+        });
+        setIsSubmitting(false);
+        router.push(`/question/${parsedQuestionDetails._id}`);
+      } else {
+        await AskQuestionAction({
+          title: values.title,
+          content: values.explanation,
+          tags: values.tags,
+          author: JSON.parse(mongoUserId),
+          path: pathname,
+        });
+        router.push("/");
+        setIsSubmitting(false);
+      }
     } catch (error) {
       setIsSubmitting(false);
     }
-    console.log(values);
   }
 
   const onKeyDownHandler = (
@@ -141,7 +153,7 @@ function Question({ mongoUserId }: Props) {
                       // @ts-ignore
                       (editorRef.current = editor)
                     }
-                    initialValue=""
+                    initialValue={parsedQuestionDetails.content || ""}
                     onBlur={field.onBlur}
                     onEditorChange={(content) => field.onChange(content)}
                     init={{
@@ -196,6 +208,7 @@ function Question({ mongoUserId }: Props) {
               <FormControl className="mt-3.5">
                 <>
                   <Input
+                    disabled={type === "Edit"}
                     className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                     placeholder="Add tags..."
                     onKeyDown={(e) => onKeyDownHandler(e, field)}
@@ -204,17 +217,24 @@ function Question({ mongoUserId }: Props) {
                     <div className="flex-start mt-2.5 gap-2.5">
                       {field.value.map((item) => (
                         <Badge
-                          onClick={() => handleTagRemove(item, field)}
+                          onClick={
+                            type !== "Edit"
+                              ? () => handleTagRemove(item, field)
+                              : () => {}
+                          }
                           className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
                           key={item}>
                           {item}
-                          <Image
-                            className="cursor-pointer object-contain invert-0 dark:invert"
-                            width={12}
-                            height={12}
-                            alt="close"
-                            src={"/assets/icons/close.svg"}
-                          />
+
+                          {type !== "Edit" && (
+                            <Image
+                              className="cursor-pointer object-contain invert-0 dark:invert"
+                              width={12}
+                              height={12}
+                              alt="close"
+                              src={"/assets/icons/close.svg"}
+                            />
+                          )}
                         </Badge>
                       ))}
                     </div>
@@ -234,9 +254,9 @@ function Question({ mongoUserId }: Props) {
           className="primary-gradient !text-light-900 w-fit"
           type="submit">
           {isSubmitting ? (
-            <> {isEdit ? "Editing..." : "Posting..."} </>
+            <> {type === "Edit" ? "Editing..." : "Posting..."} </>
           ) : (
-            <> {isEdit ? "Edit Question" : "Ask a question"} </>
+            <> {type === "Edit" ? "Edit Question" : "Ask a question"} </>
           )}
         </Button>
       </form>

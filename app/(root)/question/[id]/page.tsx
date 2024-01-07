@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { getQuestionById } from "@/lib/actions/question.action";
 import Link from "next/link";
 import Image from "next/image";

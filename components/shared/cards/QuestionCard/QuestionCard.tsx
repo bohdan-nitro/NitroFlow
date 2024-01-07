@@ -3,6 +3,8 @@ import Link from "next/link";
 import RenderTag from "../../RenderTag/RenderTag";
 import Metric from "../../Metric/Metric";
 import { getTimeStamp, formatDividerNumber } from "@/lib/utils";
+import { SignedIn } from "@clerk/nextjs";
+import EditDeleteAction from "../../EditDeleteAction/EditDeleteAction";
 
 export interface QuestionProps {
   _id: number;
@@ -11,6 +13,7 @@ export interface QuestionProps {
     _id: string;
     name: string;
     picture: string;
+    clerkId: string;
   }[];
   upvotes: string[];
   views: number;
@@ -20,6 +23,7 @@ export interface QuestionProps {
     _id: string;
     name: string;
   }[];
+  clerkId?: string;
 }
 
 const QuestionCard = ({
@@ -31,7 +35,10 @@ const QuestionCard = ({
   answers,
   createdAt,
   tags,
+  clerkId,
 }: QuestionProps) => {
+  const showActionBtns = clerkId && clerkId === author[0].clerkId;
+
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
@@ -46,6 +53,11 @@ const QuestionCard = ({
           </Link>
         </div>
         {/* If signed in todo edit delete actions */}
+        <SignedIn>
+          {showActionBtns && (
+            <EditDeleteAction type="Question" itemId={JSON.stringify(_id)} />
+          )}
+        </SignedIn>
       </div>
       <div className="mt-3.5 flex flex-wrap gap-3">
         {tags.map((item) => (
