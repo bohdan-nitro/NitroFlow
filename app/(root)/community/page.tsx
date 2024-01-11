@@ -6,9 +6,12 @@ import { UserFilters } from "@/constans/filters";
 import { getAllUsers } from "@/lib/actions/user.action";
 import Link from "next/link";
 import UserCard from "@/components/shared/cards/UserCard/UserCard";
+import { SearchParamsProps } from "@/types";
 
-async function Community() {
-  const result = await getAllUsers({});
+async function Community({ searchParams }: SearchParamsProps) {
+  const result = await getAllUsers({
+    searchQuery: searchParams.q,
+  });
 
   return (
     <>

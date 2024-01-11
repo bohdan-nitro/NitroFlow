@@ -1,5 +1,17 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import qs from "query-string"
+
+interface UrlQueryParams {
+  params: string;
+  key: string;
+  value: string | null;
+}
+
+interface RemoveUrlQueryParams {
+  params: string;
+  keysToRemove: string[];
+}
  
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -59,4 +71,27 @@ export const formatDividerNumber = (num: number): string => {
 export function formatDateWithMonthAndYear2(dateObject:Date): string {
   const options = { year: 'numeric', month: 'long' };
   return dateObject.toLocaleDateString('en-US', options);
+}
+
+export function formUrlQuery({params, key, value}: UrlQueryParams){
+  const currentUrl = qs.parse(params);
+  currentUrl[key] = value;
+  return qs.stringifyUrl({
+    url: window.location.pathname,
+    query: currentUrl
+  }, {
+    skipNull: true
+  })
+}
+export function removeKeysFromQuery({params, keysToRemove}: RemoveUrlQueryParams){
+  const currentUrl = qs.parse(params);
+  keysToRemove.forEach((key) => {
+    delete currentUrl[key]
+  })
+  return qs.stringifyUrl({
+    url: window.location.pathname,
+    query: currentUrl
+  }, {
+    skipNull: true
+  })
 }

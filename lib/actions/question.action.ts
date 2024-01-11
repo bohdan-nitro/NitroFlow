@@ -7,16 +7,27 @@ import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 import Answer from "@/database/answer.model";
 import Interaction from "@/database/interaction.model";
+import { FilterQuery } from "mongoose";
 
 export async function getQuestions(params:GetQuestionsParams) {
     try {
         connectToDataBase()
-        const questions = await Question.find({})
+        const {searchQuery} = params;
+
+        const query: FilterQuery<typeof Question> = {};
+        if(searchQuery){
+            query.$or = [
+                {title: {$regex: new RegExp(searchQuery, "i")}},
+                {content: {$regex: new RegExp(searchQuery, "i")}},
+            ]
+        }
+        console.log(query, "query", searchQuery)
+        const questions = await Question.find(query)
         // Почему мы делаем сдесь популейт? Это для того чтобы достать данные из этих частей так как монго дб изначально хранит только ссылки на эти таблицы и если мы хотим вытащить что там внутри то нужно сделать вот так
         .populate({path: "tags", model: Tag})
         .populate({path: "author", model: User})
         .sort({createdAt: -1})
-
+        
         return {questions}
     } catch (error) {
         console.log(error)
@@ -171,6 +182,20 @@ export async function editQuestion(params:EditQuestionParams) {
          await question.save()
        
         revalidatePath(path)
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export async function getHotQuestions() {
+    try {
+        connectToDataBase()
+        const hotQuestions = await Question.find({})
+        .sort({views: -1, upvotes: -1})
+        .limit(5)
+        return hotQuestions;
+
     } catch (error) {
         console.log(error)
         throw error

@@ -1,7 +1,9 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 
 interface SearchProps {
   route: string;
@@ -18,10 +20,41 @@ function LocalSearchbar({
   otherClasses,
   placeholder,
 }: SearchProps) {
-  const [text, setText] = useState("");
+  const router = useRouter();
+  const pathName = usePathname();
+  const searchParams = useSearchParams();
+
+  const query = searchParams.get("q");
+  const [text, setText] = useState(query || "");
+
+  console.log(query);
+
   const handleText = (event: ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };
+
+  useEffect(() => {
+    const delayDeboundeFn = setTimeout(() => {
+      if (text) {
+        const newUrl = formUrlQuery({
+          params: searchParams.toString(),
+          key: "q",
+          value: text,
+        });
+        router.push(newUrl, { scroll: false });
+      } else {
+        if (pathName === route) {
+          const newUrl = removeKeysFromQuery({
+            params: searchParams.toString(),
+            keysToRemove: ["q"],
+          });
+          router.push(newUrl, { scroll: false });
+        }
+      }
+    }, 400);
+    return () => clearTimeout(delayDeboundeFn);
+  }, [text, searchParams, router, route, pathName, query]);
+
   return (
     <div
       className={`background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-[10px] px-4 ${otherClasses}`}>

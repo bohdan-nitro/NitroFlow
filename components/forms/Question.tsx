@@ -35,8 +35,10 @@ function Question({ mongoUserId, type, questionDetails }: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const parsedQuestionDetails = JSON.parse(questionDetails || "");
-  const groupTags = parsedQuestionDetails.tags.map((item) => item.name);
+  const parsedQuestionDetails =
+    type === "Edit" && JSON.parse(questionDetails || "");
+  const groupTags =
+    type === "Edit" && parsedQuestionDetails.tags.map((item) => item.name);
 
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
