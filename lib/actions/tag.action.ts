@@ -25,7 +25,35 @@ export async function getTopInteractedTags(params:GetTopInteractedTagsParams) {
 export async function getAllTags(params:GetAllTagsParams) {
     try {
     connectToDataBase()
-    const tags = await Tag.find({})
+    const {searchQuery, filter} = params;
+    const query: FilterQuery<typeof Tag> = {};
+
+    // Если есть данные с инпута то мы будем искать по ним совпадения в базе через regex
+    if(searchQuery){
+        query.$or = [
+            {name: {$regex: new RegExp(searchQuery, "i")}}
+        ]
+    }
+    let sortOptions = {};
+
+    switch (filter){
+        case "old":
+            sortOptions = {createdAt: 1}
+            break;
+        case "popular":
+            sortOptions = {questions: -1}
+            break;
+        case "name":
+            sortOptions = {name: 1}
+            break;
+        case "recent":
+            sortOptions = {createdAt: -1}
+            break;
+        default:
+            break;
+    }
+    // Возвращаем либо те данные которые совпадают по квери либо все данные прокидывая пустой обьект
+    const tags = await Tag.find(query).sort(sortOptions)
     return {tags}
     } catch (error) {
     console.log(error)

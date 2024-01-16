@@ -12,21 +12,38 @@ import { FilterQuery } from "mongoose";
 export async function getQuestions(params:GetQuestionsParams) {
     try {
         connectToDataBase()
-        const {searchQuery} = params;
+        const {searchQuery, filter} = params;
 
         const query: FilterQuery<typeof Question> = {};
+        // Эта часть отвечает за поиск в инпуте что тоже приходит из параметров в качестве строки
+        // Мы ищем совпадения по навзанию или же совпадения в контенте и тогда показывает данные которые совпадают
         if(searchQuery){
             query.$or = [
                 {title: {$regex: new RegExp(searchQuery, "i")}},
                 {content: {$regex: new RegExp(searchQuery, "i")}},
             ]
         }
-        console.log(query, "query", searchQuery)
+        let sortOptions = {};
+        // C параметров мы получаем строку из фильтр компонента и по этой строке мы делаем сортировку
+        switch (filter){
+            case "newest":
+                sortOptions = {createdAt: -1}
+                break;
+            case "frequent":
+                sortOptions = {views: -1}
+                break
+            case "unanswered":
+                query.answers = {$size: 0}
+                break;
+                default:
+                break;
+        }
         const questions = await Question.find(query)
         // Почему мы делаем сдесь популейт? Это для того чтобы достать данные из этих частей так как монго дб изначально хранит только ссылки на эти таблицы и если мы хотим вытащить что там внутри то нужно сделать вот так
         .populate({path: "tags", model: Tag})
         .populate({path: "author", model: User})
-        .sort({createdAt: -1})
+        // Сортировка прокидывается вот сюда и если нет никаких совпадений то будет просто пустой обьект что отключает любую сортировку и показывает полный список данных
+        .sort(sortOptions)
         
         return {questions}
     } catch (error) {

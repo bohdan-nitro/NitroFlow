@@ -6,9 +6,13 @@ import { TagFilters } from "@/constans/filters";
 import Noresult from "@/components/shared/Noresult/Noresult";
 import { getAllTags } from "@/lib/actions/tag.action";
 import TagsCard from "@/components/shared/cards/TagsCard/TagsCard";
+import { SearchParamsProps } from "@/types";
 
-async function Tags() {
-  const result = await getAllTags({});
+async function Tags({ searchParams }: SearchParamsProps) {
+  const result = await getAllTags({
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
+  });
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">All Tags</h1>

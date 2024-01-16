@@ -21,7 +21,7 @@ async function Page({ params, searchParams }: URLProps) {
         <LocalSearchbar
           imgSrc={"./assets/icons/search.svg"}
           iconPosition={"left"}
-          route={"/"}
+          route={`/tags/${params.id}`}
           placeholder={"Search for tag questions"}
           otherClasses="flex-1"
         />

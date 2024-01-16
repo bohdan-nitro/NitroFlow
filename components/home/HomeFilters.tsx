@@ -2,17 +2,32 @@
 import React, { useState } from "react";
 import { HomePageFilters } from "@/constans/filters";
 import { Button } from "../ui/button";
-
-interface FilterProps {
-  name: string;
-  value: string;
-}
+import { useSearchParams, useRouter } from "next/navigation";
+import { formUrlQuery } from "@/lib/utils";
 
 function HomeFilters() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [active, setActive] = useState("");
 
-  const handleActive = ({ value }: FilterProps): void => {
-    setActive(value);
+  const handleTypeClick = (item: string) => {
+    if (active === item) {
+      setActive("");
+      const newUrl = formUrlQuery({
+        params: searchParams.toString(),
+        key: "filter",
+        value: null,
+      });
+      router.push(newUrl, { scroll: false });
+    } else {
+      setActive(item);
+      const newUrl = formUrlQuery({
+        params: searchParams.toString(),
+        key: "filter",
+        value: item.toLocaleLowerCase(),
+      });
+      router.push(newUrl, { scroll: false });
+    }
   };
 
   return (
@@ -25,7 +40,7 @@ function HomeFilters() {
               : "bg-light-800 text-light-500 hover:bg-light-700 dark:bg-dark-300 dark:text-light-500 dark:hover:bg-dark-400"
           }`}
           key={item.value}
-          onClick={() => handleActive(item)}>
+          onClick={() => handleTypeClick(item.value)}>
           {item.name}
         </Button>
       ))}

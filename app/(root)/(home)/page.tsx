@@ -13,6 +13,7 @@ import { SearchParamsProps } from "@/types";
 async function Home({ searchParams }: SearchParamsProps) {
   const result = await getQuestions({
     searchQuery: searchParams.q,
+    filter: searchParams.filter,
   });
 
   return (

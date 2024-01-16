@@ -18,6 +18,7 @@ async function Collection({ searchParams }: SearchParamsProps) {
   const result = await getSavedQuestions({
     clerkId: userId,
     searchQuery: searchParams.q,
+    filter: searchParams.filter,
   });
 
   return (
@@ -28,7 +29,7 @@ async function Collection({ searchParams }: SearchParamsProps) {
         <LocalSearchbar
           imgSrc={"./assets/icons/search.svg"}
           iconPosition={"left"}
-          route={"/"}
+          route={"/collection"}
           placeholder={"Search for questions"}
           otherClasses="flex-1"
         />

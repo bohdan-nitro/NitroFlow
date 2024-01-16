@@ -27,8 +27,6 @@ function LocalSearchbar({
   const query = searchParams.get("q");
   const [text, setText] = useState(query || "");
 
-  console.log(query);
-
   const handleText = (event: ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };
