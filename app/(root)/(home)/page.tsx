@@ -9,6 +9,7 @@ import QuestionCard from "@/components/shared/cards/QuestionCard/QuestionCard";
 import Noresult from "@/components/shared/Noresult/Noresult";
 import { getQuestions } from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
+import Pagination from "@/components/shared/Pagination/Pagination";
 
 async function Home({ searchParams }: SearchParamsProps) {
   const result = await getQuestions({
@@ -66,6 +67,10 @@ async function Home({ searchParams }: SearchParamsProps) {
           />
         )}
       </div>
+      <Pagination
+        page={searchParams?.page ? +searchParams.page : 1}
+        isNext={result.isNext}
+      />
     </>
   );
 }
