@@ -12,7 +12,7 @@ import { FilterQuery } from "mongoose";
 export async function getQuestions(params:GetQuestionsParams) {
     try {
         connectToDataBase()
-        const {searchQuery, filter} = params;
+        const {searchQuery, filter, page} = params;
 
         const query: FilterQuery<typeof Question> = {};
         // Эта часть отвечает за поиск в инпуте что тоже приходит из параметров в качестве строки
